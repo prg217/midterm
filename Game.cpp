@@ -1,12 +1,8 @@
 #include "Game.h"
-#include "Player.h"
-#include "Enemy.h"
-
-Game* Game::s_pInstance = 0;
 
 bool Game::init(const char *title, int xpos, int ypos, int width, int height, int flags)
 {
-  if (SDL_Init(SDL_INIT_EVERYTHING) >= 0)
+  if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
   {
     m_pWindow = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
     if (m_pWindow != 0)
@@ -31,13 +27,8 @@ bool Game::init(const char *title, int xpos, int ypos, int width, int height, in
   return false; // SDL 초기화 실패
   }
 
-  if(!TheTextureManager::Instance()->load("Assets/animate-alpha.png", "animate", m_pRenderer))
-  {
-    return false;
-  }
-
-  m_gameObjects.push_back(new Player(new LoaderParams(100, 100, 128, 82, "animate")));
-  m_gameObjects.push_back(new Enemy(new LoaderParams(100, 100, 128, 82, "animate")));
+  m_textureManager.load("Assets/animate-alpha.png", "animate", m_pRenderer);
+  //-가 복사하면서 안돼서 오류 
 
   m_bRunning = true;
   return true;
@@ -45,20 +36,15 @@ bool Game::init(const char *title, int xpos, int ypos, int width, int height, in
 
 void Game::update()
 {
-  for (int i=0; i<m_gameObjects.size(); i++)
-  {
-    m_gameObjects[i]->update();
-  }
+  m_currentFrame = ((SDL_GetTicks() / 100) % 6);
 }
 
 void Game::render()
 {
   SDL_RenderClear(m_pRenderer);
 
-  for (int i=0; i<m_gameObjects.size(); i++)
-  {
-    m_gameObjects[i]->draw();
-  }
+  m_textureManager.draw("animate", 0, 0, 128, 82, m_pRenderer);
+  m_textureManager.drawFrame("animate", 100, 100, 128, 82, 0, m_currentFrame, m_pRenderer);
 
   SDL_RenderPresent(m_pRenderer);
 }
