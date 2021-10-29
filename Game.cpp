@@ -10,7 +10,7 @@ bool Game::init(const char *title, int xpos, int ypos, int width, int height, in
       m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
       if (m_pRenderer != 0) 
       {
-        SDL_SetRenderDrawColor(m_pRenderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(m_pRenderer, 255, 0, 0, 255);
       } 
       else 
       {
@@ -27,7 +27,8 @@ bool Game::init(const char *title, int xpos, int ypos, int width, int height, in
   return false; // SDL 초기화 실패
   }
 
-  SDL_Surface* pTempSurface = SDL_LoadBMP("Assets/animate.bmp");
+  //SDL_Surface * pTempSurface = IMG_Load("Assets/animate.png");
+  SDL_Surface * pTempSurface = IMG_Load("Assets/animate-alpha.png");
   m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
 
   m_sourceRectangle.w = 128;
